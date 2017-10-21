@@ -18,12 +18,10 @@ spec:
         ports:
         - containerPort: {{ .Values.service.internalPort }}
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: {{ .Values.service.internalPort }}
-        readinessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.service.internalPort }}
-        resources:
-{{ toYaml .Values.resources | indent 10 }}
+        env:
+        - name: COUCHDB_PASSWORD
+          value: "passw0rd"
+        - name: COUCHDB_USER
+          value: admin

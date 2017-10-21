@@ -15,15 +15,20 @@ spec:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "Pass4Admin123"
+        - name: MYSQL_USER
+          value: "dbuser"
+        - name: MYSQL_PASSWORD
+          value: "Pass4dbUs3R"
+        - name: MYSQL_DATABASE
+          value: "inventorydb"
         ports:
         - containerPort: {{ .Values.service.internalPort }}
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: {{ .Values.service.internalPort }}
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: {{ .Values.service.internalPort }}
-        resources:
-{{ toYaml .Values.resources | indent 10 }}

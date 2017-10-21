@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "fullname" . }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+spec:
+  template:
+    metadata:
+      name: "{{ .Chart.Name }}Job"
+    spec:
+      containers:
+      - name: "{{ .Chart.Name }}-job"
+        image: netroby/ubuntu-git:latest
+        command: ["/bin/bash","-c"]
+        args: 
+        - >
+          git clone https://github.com/bluemix-enablement/helm-course;
+          cd helm-course/script;
+          chmod a+x *;
+          ./populateMysql.sh
+      restartPolicy: Never
